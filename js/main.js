@@ -4,7 +4,7 @@ import { Cell } from './Cell';
 
 function GameOfLife(selector){
 
-    var this = this;
+    var that = this;
 
     var selector = selector;
 
@@ -45,11 +45,12 @@ function GameOfLife(selector){
 
     this.start = function() {
         var goNow = setInterval(function(){
-        if(this.getState() == true)
+        if(that.getState() == true)
         {
+            alert("DONE");
             clearInterval(goNow);
         }
-        this.next();
+        that.next();
         }, 500);
     }
 
