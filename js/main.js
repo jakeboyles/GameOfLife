@@ -4,9 +4,13 @@ import { Cell } from './Cell';
 
 function GameOfLife(selector){
 
+    var this = this;
+
     var selector = selector;
 
     var square = document.querySelector(selector).offsetWidth;
+
+    var gameFinished = false;
 
     var svg = d3.select(selector).append("svg:svg")
         .attr("width", square)
@@ -29,6 +33,24 @@ function GameOfLife(selector){
 
         grid.reset();
 
+    }
+
+    this.reset = function() {
+        gameFinished = false;
+    }
+
+    this.getState = function(){
+        return gameFinished;
+    }
+
+    this.start = function() {
+        var goNow = setInterval(function(){
+        if(this.getState() == true)
+        {
+            clearInterval(goNow);
+        }
+        this.next();
+        }, 500);
     }
 
     this.next = function(){
@@ -58,7 +80,7 @@ function GameOfLife(selector){
 
         if(grid.aliveCells() == 0 )
         {
-            alert("Game Finished");
+            gameFinished = true;
         }
 
     };
@@ -70,14 +92,12 @@ function GameOfLife(selector){
 var GameOfLife = new GameOfLife('#viz');
 
 $("#submitForm").on("submit",function(e){
-
+    GameOfLife.reset();
     e.preventDefault();
     var height = $("#height").val();
     var width = $("#width").val();
 
-    window.setInterval(function(){
-        GameOfLife.setGrid(height,width);
-        GameOfLife.next();
-    }, 1000);
+    GameOfLife.setGrid(height,width);
 
-})
+    GameOfLife.start();
+});
