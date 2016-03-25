@@ -6,5 +6,11 @@ $("#submitForm").on("submit",function(e){
     e.preventDefault();
     var height = $("#height").val();
     var width = $("#width").val();
-    Game.start(height,width);
+    var speed = $("#speed").val();
+    Game.start(height,width,speed);
 });
+
+
+$("#reset").on("click",function(){
+	Game.reset();
+})

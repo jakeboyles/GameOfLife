@@ -3,6 +3,10 @@ import { Cell } from './Cell';
 
 export function GameOfLife(selector){
 
+    var speed = 1000;
+
+    var moves = [];
+
     var selector = selector;
 
     var square = document.querySelector(selector).offsetWidth;
@@ -28,15 +32,15 @@ export function GameOfLife(selector){
     };
 
     var reset = function() {
+        moves = [];
         gameFinished = false;
     };
 
-    var getState = function(){
-        return gameFinished;
-    };
+    var getState = gameFinished => gameFinished;
 
-    var start = function(height,width) {
+    var start = function(height,width,speed) {
         this.reset();
+        speed = speed;
         this.setGrid(height,width);
         var goNow = setInterval(function(){
             if(getState() == true)
@@ -45,17 +49,21 @@ export function GameOfLife(selector){
                 clearInterval(goNow);
             }
             next();
-        }, 1000);
+        }, speed);
     };
+
+    var setAnimationSpeed = function(speed){
+        speed = speed;
+    }
 
     var next = function(){
         grid.step();
-        squares = squares.data(grid.aliveCells(),function(d){return d.n});
+        squares = squares.data(grid.aliveCells(),d => d.n);
         console.log(grid.aliveCells());
         // Loop through all our live cells
         squares.enter().append("rect")
-                .attr("x", function(d){return d.x*wRatio})
-                .attr("y", function(d){return d.y*hRatio})
+                .attr("x", d => d.x*wRatio)
+                .attr("y", d => d.y*hRatio)
                 .attr("width",wRatio)
                 .attr("height",wRatio)
                 .transition().duration(500)
@@ -71,6 +79,9 @@ export function GameOfLife(selector){
             gameFinished = true;
         }
 
+        moves.push(grid.aliveCellsCount());
+        $(".aliveCells").html(grid.aliveCellsCount());
+
     };
 
     return {
@@ -78,7 +89,8 @@ export function GameOfLife(selector){
         start: start,
         getState:getState,
         reset:reset,
-        setGrid:setGrid
+        setGrid:setGrid,
+        setAnimationSpeed:setAnimationSpeed
      };
 
 };

@@ -2,6 +2,7 @@ import { Cell } from './Cell';
 
 
 export function CellGrid(rows, columns) {
+    var alive = [];
     this.cells = new Array(rows);
     var n = 0;
     for(var i = -1; ++i < rows;){
@@ -69,5 +70,9 @@ CellGrid.prototype.aliveCells = function() {
     this.eachCell(function(cell){
         cell.isAlive && alive.push(cell);
     });
+    this.alive = alive;
     return alive;
+};
+CellGrid.prototype.aliveCellsCount = function() {
+    return this.alive.length;
 };
